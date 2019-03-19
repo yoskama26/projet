@@ -1,0 +1,22 @@
+<div class="container">
+<h1>Ceci est la page qui affiche le résultat de la dernière partie</h1>
+
+  % include('head.html')
+<div class="border shadow p-3 mb-5 bg-white rounded text-center">
+
+
+% if last_game == None:
+    <p> Pas de statistiques rentrées</p>
+ % else:
+
+<p> Nom machine : {{last_game.machine.nom}}</p>
+<p> Jeu installe : {{last_game.machine.jeu_installe}} </p>
+<p> Durée de la derniere partie {{last_game.duree_jeu}}s </p>
+<p> Joueur Gagnant : {{last_game.gagnant}}</p>
+
+% end
+</div>
+    % include('footer.html')
+
+   <br>
+   </div>
