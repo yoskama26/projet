@@ -1,4 +1,5 @@
 <div class="container">
+<script>setTimeout(function(){window.location.reload(1); }, 4000);</script>
 <h1>Ceci est la page qui affiche le résultat de la dernière partie</h1>
 
   % include('head.html')
