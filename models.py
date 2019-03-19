@@ -2,14 +2,23 @@ from peewee import *
 import datetime
 import os
 import json
-mysql_db = MySQLDatabase('fil_rouge', user='equipeDavid', password='equipeDavid07210.', host='10.1.0.126')
+from settings import mysql_db
+
 mysql_db.connect()
 
 
-class GameServers(Model):
-    adress_ip = CharField(unique=True)
-    nom = CharField(unique=True)
-    jeu_installe = CharField(max_length=50)
+class GameServerConfig(Model):
+    adresse_ip = CharField(max_length=50, unique=True, )
+    name_server = CharField(max_length=50, unique=True)
+    game = CharField(max_length=50)
+    max_player_delay = CharField(max_length=50, unique=True, default=12)
+    max_coin_blink_delay = CharField(max_length=50, unique=True, default=12)
+    victory_blink_delay = CharField(max_length=50,default=12)
+    level = CharField(default=1)
+    heure_modif = DateTimeField(default=datetime.datetime.now)
+    player1_color = CharField(max_length=50, unique=True, default="blue")
+    player2_color = CharField(max_length=50, unique=True, default="red")
+
 
     class Meta:
         database = mysql_db
@@ -23,14 +32,14 @@ class ReceivedMessage(Model):
     message = CharField(max_length=2000)
     message_ID = IntegerField()
     date_arrivee = DateTimeField(default=datetime.datetime.now)
-    machine = ForeignKeyField(GameServers, backref='ReceivedMessage')
+    machine = ForeignKeyField(GameServerConfig, backref='ReceivedMessage')
 
     class Meta:
         database = mysql_db
 
 
 class StatsPerMatch(Model):
-    machine = ForeignKeyField(GameServers, backref='StatsPerMatch')
+    machine = ForeignKeyField(GameServerConfig, backref='StatsPerMatch')
     date_debut = DateTimeField()
     duree_jeu = IntegerField()
     gagnant = CharField()
@@ -41,7 +50,7 @@ class StatsPerMatch(Model):
 
 class StatsPerDay(Model):
     date = DateField()
-    machine = ForeignKeyField(GameServers, backref='StatsPerDay')
+    machine = ForeignKeyField(GameServerConfig, backref='StatsPerDay')
     nb_partie_jour = IntegerField()
     duree_moy_partie_jour = IntegerField()
     nb_fois_gagnant1 = IntegerField()
@@ -52,7 +61,7 @@ class StatsPerDay(Model):
         database = mysql_db
 
 
-mysql_db.create_tables([GameServers, ReceivedMessage, StatsPerMatch, StatsPerDay])
+mysql_db.create_tables([GameServerConfig, ReceivedMessage, StatsPerMatch, StatsPerDay])
 
 
 
