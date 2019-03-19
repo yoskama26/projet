@@ -1,4 +1,5 @@
 <div class="container">
+<script>setTimeout(function(){window.location.reload(1); }, 4000);</script>
 % include('head.html')
 <h1>Ceci est la page des statistiques par jour qui reçoit en parametre la machine {{nom}}</h1>
 <div class="border shadow p-3 mb-5 bg-white rounded text-center">
