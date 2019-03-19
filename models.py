@@ -1,7 +1,5 @@
 from peewee import *
 import datetime
-import os
-import json
 from settings import mysql_db
 
 mysql_db.connect()
@@ -19,13 +17,8 @@ class GameServerConfig(Model):
     player1_color = CharField(max_length=50, unique=True, default="blue")
     player2_color = CharField(max_length=50, unique=True, default="red")
 
-
     class Meta:
         database = mysql_db
-
-    @classmethod
-    def lister_serveur(cls):
-        return cls.select()
 
 
 class ReceivedMessage(Model):

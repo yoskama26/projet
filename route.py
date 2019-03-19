@@ -1,13 +1,26 @@
-from bottle import route, run, template
-from models import GameServers
+from bottle import route, run, template, post, request, redirect
+from models import GameServerConfig
 from models import StatsPerDay
 from models import StatsPerMatch
 from models import ReceivedMessage
 
 
+@route('/config/<nom_machine>')
+def config_machine(nom_machine):
+    obj = GameServerConfig.get(GameServerConfig.name_server == nom_machine)
+    return template('config2.tpl', config=obj)
+
+@post('/config/<nom_machine>')
+def config_machine(nom_machine):
+    print(dict(request.forms))
+    obj = GameServerConfig.update(**request.forms).where(GameServerConfig.name_server == nom_machine)
+    obj.execute()
+    redirect('/config/'+nom_machine)
+
+
 @route('/gameservers')
 def gameservers():
-    return template('page_game_servers.html', Serveurs_info=GameServers.select())
+    return template('page_game_servers.html', Serveurs_info=GameServerConfig.select())
 
 
 @route('/config')

@@ -3,7 +3,7 @@
     <input type="text" name="adresse_ip" value="{{ config.adresse_ip }}"> <br>
 
     name_server :
-    <input type="text" name="name_server" value="{{ config.nom_serveur }}"> <br>
+    <input type="text" name="name_server" value="{{ config.name_server }}"> <br>
 
     game :
     <select name="game">
@@ -15,7 +15,7 @@
     <input type="number" name="max_player_delay" value="{{ config.max_player_delay }}"> <br>
 
     max coin blink delay :
-    <input type="number" name="max_coin_blink_delay" value="{{ config.max_coin }}"> <br>
+    <input type="number" name="max_coin_blink_delay" value="{{ config.max_coin_blink_delay }}"> <br>
 
     Victory Blink delay :
     <input type="number" name="victory_blink_delay" value="{{ config.victory_blink_delay }}"> <br>

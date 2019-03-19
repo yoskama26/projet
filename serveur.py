@@ -1,8 +1,9 @@
 from socket import socket, AF_INET, SOCK_STREAM, SOL_SOCKET, SO_REUSEADDR
 import json
-from application import *
-from setting import TCP_HOST, TCP_PORT, BUFFER_SIZE, ENCODING, BYTE_ORDER
-
+from peewee import DoesNotExist
+from appli import analyse_message_recu
+from models import GameServerConfig
+from settings import TCP_HOST, TCP_PORT, BUFFER_SIZE, ENCODING, BYTE_ORDER
 
 with socket(AF_INET, SOCK_STREAM) as sock:
     sock.setsockopt(SOL_SOCKET, SO_REUSEADDR, 2)
@@ -13,7 +14,7 @@ with socket(AF_INET, SOCK_STREAM) as sock:
         (conn, addr) = sock.accept()
         addresse_ip = addr[0]
         print("Connection received from {}:{}".format(*addr))
-        #lecture des 2 premiers bytes :
+        # lecture des 2 premiers bytes :
         msg_longueur = conn.recv(BUFFER_SIZE)
         length = (int.from_bytes(msg_longueur, byteorder=BYTE_ORDER))
 
@@ -36,14 +37,19 @@ with socket(AF_INET, SOCK_STREAM) as sock:
                 conn.send(full_message)
                 conn.close()
             elif message_recu_dict.get('Msg type') == 'CONFIG':
-                message_reponse_dict = {"Msg type": "CONFIG",
-                                        "Msg ID": message_recu_dict['Msg ID'],
-                                        "Max player delay": 10,
-                                        "Max coin blink delay": 1,
-                                        "Victory blink delay": 1,
-                                        "Level": 2,
-                                        "Player1 color": 'jaune',
-                                        "Player2 color": 'rouge'}
+                try:
+                    obj = GameServerConfig.get(GameServerConfig.name_server == message_recu_dict.get("Machine name"))
+                    message_reponse_dict = {"Msg type": "CONFIG",
+                                            "Msg ID": message_recu_dict['Msg ID'],
+                                            "Max player delay": obj.max_player_delay,
+                                            "Max coin blink delay": obj.max_coin_blink_delay,
+                                            "Victory blink delay": obj.victory_blink_delay,
+                                            "Level": obj.level,
+                                            "Player1 color": obj.player1_color,
+                                            "Player2 color": obj.player2_color,
+                                            }
+                except DoesNotExist:
+                    message_reponse_dict = {}
                 message_reponse_json = json.dumps(message_reponse_dict)
                 message_bytes = bytes(str(message_reponse_json).encode(ENCODING))
                 first_bytes = len(message_bytes).to_bytes(BUFFER_SIZE, byteorder=BYTE_ORDER)
@@ -52,6 +58,3 @@ with socket(AF_INET, SOCK_STREAM) as sock:
                 conn.close()
         else:
             print("Le serveur n'a renvoyé aucune réponse")
-
-
-
