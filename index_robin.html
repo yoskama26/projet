@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="fr">
+<div class="container">
+  % include('head.html')
+<body>
+<h1> Stats par match </h1>
+<div class="border shadow p-3 mb-5 bg-white rounded text-center">
+<p>
+% for item in Stats_list:
+    <p> Terminal N° : {{item.machine}}</p>
+    <p> Date du debut de la partie : {{item.date_debut}} </p>
+    <p> Date temp de la partie : {{item.duree_jeu}} </p>
+    <p> Gagnant : {{item.gagnant}}</p>
+    <br>
+</p>
+% end
+</div>
+</body>
+<footer>
+   % include('footer.html')
+</footer>
+    </div>
+</html>
